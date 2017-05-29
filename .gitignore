@@ -1,0 +1,9 @@
+*~
+*.pyc
+*.txt
+*.pdf
+.idea
+*.html
+*.htm
+*.zip
+*.json
