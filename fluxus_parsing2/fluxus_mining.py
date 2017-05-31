@@ -17,10 +17,10 @@ for f in os.listdir(dir):
         extrated_text = bs.getText()
         extrated_text = re.sub(r"(\s*\n\s*)+", "NEWLINE", extrated_text)
         extrated_text = re.sub("(NEWLINE)+", "NEWLINE", extrated_text, flags=re.MULTILINE)
-        extrated_text = re.sub(r"(\(\d+\)|-\d\d\d\d)", "", extrated_text, flags=re.MULTILINE)
+        extrated_text = re.sub(r"(\(\d+\)|-19\d\d)", "", extrated_text, flags=re.MULTILINE)
         extrated_text = re.sub(r"D\n*A\ns*T\n*E?\s*U\n*N\n*K\n*N\n*O\n*W\n*N", "DATE UNKNOWN", extrated_text,
                                flags=re.MULTILINE)
-        extrated_text = re.sub("(\d\d\d\d|DATE UNKNOWN|UNKNOWN DATE)", r"\1NEWLINE", extrated_text)
+        extrated_text = re.sub("(19\d\d|DATE UNKNOWN|UNKNOWN DATE)", r"\1NEWLINE", extrated_text)
         # extrated_text = re.sub("(\d\d\d\d|DATE UNKNOWN)", "\1#NEWLINE#", extrated_text)
         removed_js = re.sub("\S+\s?\{[^\}]+\}", "", extrated_text)
         removed_js = re.sub("NEWLINE", "\n", removed_js)
@@ -32,7 +32,7 @@ for f in os.listdir(dir):
         removed_colontitles = re.sub(r"\n\d{1,2}\n", "\n", removed_colontitles, flags=re.MULTILINE)
         removed_colontitles = re.sub(r"\n+", "\n", removed_colontitles, flags=re.MULTILINE)
         removed_colontitles = re.sub(r"([A-Z][ \n]){2,20}", "\n", removed_colontitles, flags=re.MULTILINE)
-        removed_colontitles = re.sub(r"(\d\d\d\d|DATE UNKNOWN|UNKNOWN DATE)", r"\1DELIMITER", removed_colontitles,
+        removed_colontitles = re.sub(r"(19\d\d|DATE UNKNOWN|UNKNOWN DATE)", r"\1DELIMITER", removed_colontitles,
                                      flags=re.MULTILINE)
 
         splitted = re.split("DELIMITER", removed_colontitles, flags=re.MULTILINE)
