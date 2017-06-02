@@ -87,9 +87,9 @@ def build_matrix(parsed_texts, depth):
     return trans_mx, ngram2id, id2next
 
 
-def generate_markov_walk(trans_mx, ngram2id, id2next, depth, teleport=0.0):
+def generate_markov_walk(trans_mx, ngram2id, id2next, depth, teleport=0.0, removable_items=[]):
     prefix = tuple(gen_seed(depth))
-    removable = set(prefix).union(set(["[s]", "[e]"]))
+    removable = set(prefix).union(set(removable_items))
     next = None
     steps = 1
 
@@ -113,10 +113,21 @@ def generate_markov_walk(trans_mx, ngram2id, id2next, depth, teleport=0.0):
     return result
 
 
-class MarkovianWordLevelGenerator(object):
+class MarkovianGenerator(object):
+    """
+        General-purpose markov chain sequences generator,
+        aware of the beginning and the end of the sequence
+    """
+
     def __init__(self, depth=2, teleport=0.0):
         self.depth = depth
         self.teleport = teleport
+
+    def __generate_prefix__(self):
+        """
+            Should generate :depth symbols, easily filterable when generating text on random walk
+        """
+        raise NotImplementedError
 
     def fit(self, texts):
         trans_mx, ngram2id, id2next = build_matrix(texts, self.depth)
@@ -125,15 +136,19 @@ class MarkovianWordLevelGenerator(object):
         self.id2word = id2next
         return self
 
-    def generate_list(self):
+    def generate_list(self, removable_items=[]):
         return generate_markov_walk(trans_mx=self.trans_mx,
                                     ngram2id=self.ngram2id,
                                     id2next=self.id2word,
                                     depth=self.depth,
-                                    teleport=self.teleport)
+                                    teleport=self.teleport,
+                                    removable_items=removable_items)
 
-    def generate_text(self):
-        return " ".join([w.replace("<n>", "\n") for w in self.generate_list()]).replace(" .", ".").replace(" ,", ",")
+    def generate_text(self, removable_items=[],
+                      extra_processor_per_item=lambda x: x,
+                      extra_text_postprocessor=lambda x: x):
+        return \
+            extra_text_postprocessor(" ".join([extra_processor_per_item(w) for w in self.generate_list(removable_items)]))
 
 
 TEXTS = read("../parsed_texts.txt")

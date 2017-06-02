@@ -11,14 +11,16 @@ def read(texts_file):
     parsed = []
 
     for line in open(texts_file, "r+"):
-        line = line.strip().lower()
-        splitted = re.findall(r"[\w'<>\]\[]+|[.,!?;]", line)
+        line = line.strip().lower().replace("[s]", "S").replace("[e]", "E").replace("<n>", "N")
+        splitted = list(line)
         parsed.append(splitted)
     return parsed
 
+WEIRD_SYMBOLS = "йцукенгшщзхъфывапролдячсмитьбю"
+
 
 def gen_seed(depth):
-    return ["*" + str(i) for i in range(depth)]
+    return [WEIRD_SYMBOLS[i] for i in range(depth)]
 
 
 def build_matrix(parsed_texts, depth):
@@ -89,7 +91,7 @@ def build_matrix(parsed_texts, depth):
 
 def generate_markov_walk(trans_mx, ngram2id, id2next, depth, teleport=0.0):
     prefix = tuple(gen_seed(depth))
-    removable = set(prefix).union(set(["[s]", "[e]"]))
+    removable = set(prefix).union(set(["S", "E"]))
     next = None
     steps = 1
 
@@ -113,12 +115,12 @@ def generate_markov_walk(trans_mx, ngram2id, id2next, depth, teleport=0.0):
     return result
 
 
-class MarkovianWordLevelGenerator(object):
+class MarkovianCharLevelGenerator(object):
     def __init__(self, depth=2, teleport=0.0):
         self.depth = depth
         self.teleport = teleport
 
-    def fit(self, texts):
+    def fit(self, texts, start_item, end_item):
         trans_mx, ngram2id, id2next = build_matrix(texts, self.depth)
         self.trans_mx = trans_mx
         self.ngram2id = ngram2id
@@ -133,14 +135,14 @@ class MarkovianWordLevelGenerator(object):
                                     teleport=self.teleport)
 
     def generate_text(self):
-        return " ".join([w.replace("<n>", "\n") for w in self.generate_list()]).replace(" .", ".").replace(" ,", ",")
+        return "".join([w.replace("N", "\n") for w in self.generate_list()]).replace(" .", ".").replace(" ,", ",")
 
 
 TEXTS = read("../parsed_texts.txt")
 
 if __name__ == "__main__":
-    depths = range(4)
-    generators = [MarkovianWordLevelGenerator(depth=d + 1).fit(TEXTS) for d in range(5)]
+    depths = range(15)
+    generators = [MarkovianCharLevelGenerator(depth=d + 1).fit(TEXTS) for d in depths]
 
     for id, gen in enumerate(generators):
         print()
