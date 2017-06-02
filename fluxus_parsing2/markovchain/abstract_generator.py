@@ -17,11 +17,7 @@ def read(texts_file):
     return parsed
 
 
-def gen_seed(depth):
-    return ["*" + str(i) for i in range(depth)]
-
-
-def build_matrix(parsed_texts, depth):
+def build_matrix(parsed_texts, depth, gen_seed):
     """
     :param parsed_texts:
     :return: (dict, matrix)
@@ -31,7 +27,7 @@ def build_matrix(parsed_texts, depth):
         print("Are you _______ crazy? Depth = ", depth, " is too much, you shouldn't go deeper")
 
     ngram2id = {}
-    prefix = gen_seed(depth)
+    prefix = gen_seed()
     postfix = prefix[::-1]
     ngram_counter = 0
 
@@ -87,8 +83,8 @@ def build_matrix(parsed_texts, depth):
     return trans_mx, ngram2id, id2next
 
 
-def generate_markov_walk(trans_mx, ngram2id, id2next, depth, teleport=0.0, removable_items=[]):
-    prefix = tuple(gen_seed(depth))
+def generate_markov_walk(trans_mx, ngram2id, id2next, depth, gen_seed, teleport=0.0, removable_items=[]):
+    prefix = tuple(gen_seed())
     removable = set(prefix).union(set(removable_items))
     next = None
     steps = 1
@@ -113,7 +109,7 @@ def generate_markov_walk(trans_mx, ngram2id, id2next, depth, teleport=0.0, remov
     return result
 
 
-class MarkovianGenerator(object):
+class AbstractMarkovianGenerator(object):
     """
         General-purpose markov chain sequences generator,
         aware of the beginning and the end of the sequence
@@ -130,34 +126,25 @@ class MarkovianGenerator(object):
         raise NotImplementedError
 
     def fit(self, texts):
-        trans_mx, ngram2id, id2next = build_matrix(texts, self.depth)
+        trans_mx, ngram2id, id2next = build_matrix(texts, self.depth, self.__generate_prefix__)
         self.trans_mx = trans_mx
         self.ngram2id = ngram2id
         self.id2word = id2next
         return self
 
-    def generate_list(self, removable_items=[]):
+    def __generate_list__(self, removable_items=[]):
         return generate_markov_walk(trans_mx=self.trans_mx,
                                     ngram2id=self.ngram2id,
                                     id2next=self.id2word,
                                     depth=self.depth,
                                     teleport=self.teleport,
-                                    removable_items=removable_items)
+                                    removable_items=removable_items,
+                                    gen_seed=self.__generate_prefix__)
 
-    def generate_text(self, removable_items=[],
-                      extra_processor_per_item=lambda x: x,
-                      extra_text_postprocessor=lambda x: x):
+    def __generate_text__(self, removable_items=[],
+                          extra_processor_per_item=lambda x: x,
+                          extra_text_postprocessor=lambda x: x,
+                          joiner=""):
         return \
-            extra_text_postprocessor(" ".join([extra_processor_per_item(w) for w in self.generate_list(removable_items)]))
-
-
-TEXTS = read("../parsed_texts.txt")
-
-if __name__ == "__main__":
-    depths = range(4)
-    generators = [MarkovianWordLevelGenerator(depth=d + 1).fit(TEXTS) for d in range(5)]
-
-    for id, gen in enumerate(generators):
-        print()
-        print("DEPTH", id + 1)
-        print(gen.generate_text())
+            extra_text_postprocessor(
+                joiner.join([extra_processor_per_item(w) for w in self.__generate_list__(removable_items)]))
