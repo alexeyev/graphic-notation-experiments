@@ -38,29 +38,44 @@ def send_welcome(message):
 
 @bot.message_handler(commands=['random'])
 def send_random(message):
-    random_score = scores[random.randint(0, len(scores))]
-    msg = bot.send_message(message.chat.id, random_score)
-    print(msg)
+    try:
+        random_score = scores[random.randint(0, len(scores))]
+        msg = bot.send_message(message.chat.id, random_score)
+        print(msg)
+    except Exception as e:
+        msg = bot.send_message(message.chat.id, "Oops, error " + str(e))
+        print(msg)
+        print(e)
 
 
 @bot.message_handler(regexp="/markov char \d+")
 def send_markov_char(message):
-    numbers = [int(s) for s in message.text.split() if s.isdigit()]
-    # todo: pretrain a lot of models
-    char_generator = MarkovianCharLevelGenerator(numbers[0]).fit(char_level.TEXTS)
-    generated_text = char_generator.generate_text()
-    msg = bot.send_message(message.chat.id, generated_text)
-    print(msg)
+    try:
+        numbers = [int(s) for s in message.text.split() if s.isdigit()]
+        # todo: pretrain a lot of models
+        char_generator = MarkovianCharLevelGenerator(numbers[0]).fit(char_level.TEXTS)
+        generated_text = char_generator.generate_text()
+        msg = bot.send_message(message.chat.id, generated_text)
+        print(msg)
+    except Exception as e:
+        msg = bot.send_message(message.chat.id, "Oops, error " + str(e))
+        print(msg)
+        print(e)
 
 
 @bot.message_handler(regexp="/markov word \d+")
 def send_markov_char(message):
-    numbers = [int(s) for s in message.text.split() if s.isdigit()]
-    # todo: pretrain a lot of models
-    word_generator = MarkovianWordLevelGenerator(numbers[0]).fit(word_level.TEXTS)
-    generated_text = word_generator.generate_text()
-    msg = bot.send_message(message.chat.id, generated_text)
-    print(msg)
+    try:
+        numbers = [int(s) for s in message.text.split() if s.isdigit()]
+        # todo: pretrain a lot of models
+        word_generator = MarkovianWordLevelGenerator(numbers[0]).fit(word_level.TEXTS)
+        generated_text = word_generator.generate_text()
+        msg = bot.send_message(message.chat.id, generated_text)
+        print(msg)
+    except Exception as e:
+        msg = bot.send_message(message.chat.id, "Oops, error " + str(e))
+        print(msg)
+        print(e)
 
 if __name__ == "__main__":
     bot.polling()
