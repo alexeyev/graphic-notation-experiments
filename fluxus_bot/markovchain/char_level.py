@@ -36,7 +36,7 @@ class MarkovianCharLevelGenerator(AbstractMarkovianGenerator):
             joiner=joiner)
 
 
-TEXTS = read("../parsed_texts.txt")
+TEXTS = read("parsed_texts.txt")
 
 if __name__ == "__main__":
     depths = range(15)
