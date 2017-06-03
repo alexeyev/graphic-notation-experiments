@@ -9,7 +9,7 @@ config_parser.read("configs/bot.ini")
 token = config_parser.get("Credentials", "ApiToken")
 bot = telebot.TeleBot(token)
 
-scores = [line.replace("<n>", "\n").replace("[S]", "").replace("[E]", "") for line in open("../fluxus_parsing2/parsed_texts.txt")]
+scores = [line.replace("<n>", "\n").replace("[S]", "").replace("[E]", "") for line in open("parsed_texts.txt")]
 
 print("Bot started.")
 
