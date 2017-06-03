@@ -76,20 +76,21 @@ for iteration in range(1, 60):
 
     model.fit(X, y, batch_size=128, nb_epoch=1)
 
-    start_index = random.randint(0, len(text) - maxlen - 1)
+    # start_index = random.randint(0, len(text) - maxlen - 1)
 
-    for diversity in [0.2, 0.5, 1.0, 1.2]:
+    for diversity in [0.1, 0.2, 0.5, 1.0, 1.2, 2.0]:
         print()
         print('----- diversity:', diversity)
 
         generated = ''
-        sentence = text[start_index: start_index + maxlen]
+        # sentence = text[start_index: start_index + maxlen]
+        sentence = "[s]  <n> "
         generated += sentence
         print('----- Generating with seed: "' + sentence + '"')
         sys.stdout.write(generated)
 
         for i in range(400):
-            x = np.zeros((1, maxlen, len(chars)))
+            x = np.zeros((1, len(sentence), len(chars)))
             for t, char in enumerate(sentence):
                 x[0, t, char_indices[char]] = 1.
 

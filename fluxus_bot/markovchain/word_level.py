@@ -2,10 +2,11 @@
 
 import re
 
-from fluxus_parsing2.markovchain.abstract_generator import AbstractMarkovianGenerator
+from fluxus_bot.markovchain.abstract_generator import AbstractMarkovianGenerator
 
 
 def read(texts_file):
+
     parsed = []
 
     for line in open(texts_file, "r+"):
