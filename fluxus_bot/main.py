@@ -51,9 +51,9 @@ def send_about(message):
         "Спонтанность можно перенести на новый уровень, сгенерировав инструкцию к перформансу перед самим перформансом."
         "В качестве механизма генерации были выбраны простые марковские цепи для слов и символов. "
         "Вероятности переходов -- относительные частоты соответствующих нграм оригинальных инструкций.\n\n"
-        "<a href=\"http://soundmuseumspb.ru/\">Сайт музея</b>\n"
-        "<a href=\"https://vk.com/soundmuseumschool\">Школа импровизационной музыки</b>\n"
-        "<a href=\"http://alexeyev.github.io/\">Об авторе</b>", parse_mode="HTML")
+        "<a href=\"http://soundmuseumspb.ru/\">Сайт музея</a>\n"
+        "<a href=\"https://vk.com/soundmuseumschool\">Школа импровизационной музыки</a>\n"
+        "<a href=\"http://alexeyev.github.io/\">Об авторе</a>", parse_mode="HTML")
     print("Response:", msg)
 
 
