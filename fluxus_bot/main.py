@@ -9,7 +9,7 @@ from fluxus_bot.markovchain import char_level, word_level
 from fluxus_bot.markovchain.char_level import MarkovianCharLevelGenerator
 from fluxus_bot.markovchain.word_level import MarkovianWordLevelGenerator
 from fluxus_bot.log_config import *
-from fluxus_bot.lstm_gen import *
+# from fluxus_bot.lstm_gen import *
 
 config_parser = configparser.ConfigParser()
 config_parser.read("configs/bot.ini")
@@ -28,12 +28,10 @@ def send_welcome(message):
         "Я — <b>FLUXUS-бот</b>, добрый день!\n\n<b>Доступные команды:</b>\n"
         " /random \n  случайный оригинальный перформанс\n"
         " /markov {char/word} {depth} \n  сгенерированный марковской цепью перформанс\n"
-        " /neural \n  сгенерированный нейронной сетью перформанс\n"
         " /about  \n  о боте\n"
         "\n<b>Примеры:</b>"
         "\n    /markov char 8"
         "\n    /markov word 2"
-        "\n    /neural "
         "\n    /random"
         "\n\nЧем больше \"глубина\" цепи, тем осмысленнее получится текст, "
         "но тем больше шансы, что он полностью скопирован цепью из книжки.\n\n"
@@ -74,16 +72,16 @@ def send_random(message):
         print(e)
 
 
-@bot.message_handler(commands=['/neural'])
-def send_random(message):
-    try:
-        neural_gen = lstm_generate()
-        msg = bot.send_message(message.chat.id, neural_gen)
-        print(msg)
-    except Exception as e:
-        msg = bot.send_message(message.chat.id, "Oops, error " + str(e))
-        print(msg)
-        print(e)
+# @bot.message_handler(commands=['/neural'])
+# def send_random(message):
+#     try:
+#         neural_gen = lstm_generate()
+#         msg = bot.send_message(message.chat.id, neural_gen)
+#         print(msg)
+#     except Exception as e:
+#         msg = bot.send_message(message.chat.id, "Oops, error " + str(e))
+#         print(msg)
+#         print(e)
 
 
 @bot.message_handler(regexp="/markov char \d+")
