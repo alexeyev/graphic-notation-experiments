@@ -9,6 +9,7 @@ from fluxus_bot.markovchain import char_level, word_level
 from fluxus_bot.markovchain.char_level import MarkovianCharLevelGenerator
 from fluxus_bot.markovchain.word_level import MarkovianWordLevelGenerator
 from fluxus_bot.log_config import *
+from fluxus_bot.lstm_gen import *
 
 config_parser = configparser.ConfigParser()
 config_parser.read("configs/bot.ini")
@@ -64,6 +65,18 @@ def send_random(message):
     try:
         random_score = scores[random.randint(0, len(scores))]
         msg = bot.send_message(message.chat.id, random_score)
+        print(msg)
+    except Exception as e:
+        msg = bot.send_message(message.chat.id, "Oops, error " + str(e))
+        print(msg)
+        print(e)
+
+
+@bot.message_handler(commands=['/neural'])
+def send_random(message):
+    try:
+        neural_gen = lstm_generate()
+        msg = bot.send_message(message.chat.id, neural_gen)
         print(msg)
     except Exception as e:
         msg = bot.send_message(message.chat.id, "Oops, error " + str(e))

@@ -16,6 +16,7 @@ import numpy as np
 import random
 import sys
 
+import pickle
 
 # path = get_file('nietzsche.txt', origin='https://s3.amazonaws.com/text-datasets/nietzsche.txt')
 path = "parsed_texts.txt"
@@ -26,6 +27,12 @@ chars = sorted(list(set(text)))
 print('total chars:', len(chars))
 char_indices = dict((c, i) for i, c in enumerate(chars))
 indices_char = dict((i, c) for i, c in enumerate(chars))
+
+with open("ch2i.bin", "wb") as ch2i:
+    pickle.dump(char_indices, ch2i)
+
+with open("i2ch.bin", "wb") as i2ch:
+    pickle.dump(indices_char, i2ch)
 
 # cut the text in semi-redundant sequences of maxlen characters
 maxlen = 40
@@ -70,7 +77,7 @@ def sample(preds, temperature=1.0):
 
 
 # train the model, output generated text after each iteration
-for iteration in range(1, 60):
+for iteration in range(3):
     print()
     print('-' * 50)
     print('Iteration', iteration)
@@ -80,6 +87,7 @@ for iteration in range(1, 60):
     # start_index = random.randint(0, len(text) - maxlen - 1)
 
     for diversity in [0.1, 0.2, 0.5, 1.0, 1.2, 2.0]:
+
         print()
         print('----- diversity:', diversity)
 
@@ -106,4 +114,7 @@ for iteration in range(1, 60):
 
             sys.stdout.write(next_char)
             sys.stdout.flush()
+
         print()
+
+    model.save("lstm_char_iter_" + str(iteration) + ".model.h5")
