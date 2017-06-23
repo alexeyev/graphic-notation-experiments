@@ -84,7 +84,8 @@ def send_neural(message):
         msg = bot.send_message(message.chat.id, neural_gen)
         print(msg)
     except Exception as e:
-        msg = bot.send_message(message.chat.id, "Oops, error " + str(e))
+        msg = bot.send_message(message.chat.id, "Был в ГЛУБОКОЙ (глубинной?) задумчивости, пожалуйста, скомандуйте снова.")
+        print("Был в ГЛУБОКОЙ (глубинной?) задумчивости, пожалуйста, скомандуйте снова.")
         print(msg)
         print(e)
 
