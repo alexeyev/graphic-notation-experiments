@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import configparser
-import telebot
 import random
 
-from fluxus_bot.markovchain import *
+import telebot
+
+from fluxus_bot.log_config import *
 from fluxus_bot.markovchain import char_level, word_level
 from fluxus_bot.markovchain.char_level import MarkovianCharLevelGenerator
 from fluxus_bot.markovchain.word_level import MarkovianWordLevelGenerator
-from fluxus_bot.log_config import *
+
 # from fluxus_bot.lstm_gen import *
 
 config_parser = configparser.ConfigParser()

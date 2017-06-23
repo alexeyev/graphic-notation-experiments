@@ -6,7 +6,7 @@ import numpy as np
 
 from keras.models import load_model
 
-loaded_model = load_model("lstm_char_iter_2.model.h5")
+loaded_model = load_model("lstm_char_iter_25.model.h5")
 char_indices = pickle.load(open("ch2i.bin", "rb"))
 indices_char = pickle.load(open("i2ch.bin", "rb"))
 
@@ -26,7 +26,7 @@ def lstm_generate(model=loaded_model, diversity=0.3):
 
     generated = ''
     # sentence = text[start_index: start_index + maxlen]
-    sentence = " " * 31 + "[s]  <n> "
+    sentence = " " * 31 + "[S]  <n> "
     generated += sentence
 
     while len(generated) < 500 and (len(generated) < 250 or not "[e]" in generated):
@@ -43,13 +43,18 @@ def lstm_generate(model=loaded_model, diversity=0.3):
         generated += next_char
         sentence = sentence[1:] + next_char
 
-    lg.info(generated)
-
-    generated = generated.replace("[s]", "").replace("[e]", "").replace("<n>", "\n").strip()
+    generated = generated \
+        .replace("[S]", "") \
+        .replace("[E]", "") \
+        .replace("<n>", "\n") \
+        .replace("]", "") \
+        .replace("[", "") \
+        .strip()
 
     lg.info(generated)
 
     return generated
+
 
 if __name__ == "__main__":
     lstm_generate()
