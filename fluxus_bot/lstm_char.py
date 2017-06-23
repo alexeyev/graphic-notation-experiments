@@ -95,8 +95,8 @@ for iteration in range(3):
         # sentence = text[start_index: start_index + maxlen]
         sentence = " " * 31 + "[s]  <n> "
         generated += sentence
-        print('----- Generating with seed: "' + sentence + '"')
-        sys.stdout.write(generated)
+        # print('----- Generating with seed: "' + sentence + '"')
+        # sys.stdout.write(generated)
 
         for i in range(400):
 
@@ -112,9 +112,9 @@ for iteration in range(3):
             generated += next_char
             sentence = sentence[1:] + next_char
 
-            sys.stdout.write(next_char)
-            sys.stdout.flush()
+            # sys.stdout.write(next_char)
+            # sys.stdout.flush()
 
-        print()
+        # print()
 
     model.save("lstm_char_iter_" + str(iteration) + ".model.h5")

@@ -21,7 +21,7 @@ def sample(preds, temperature=1.0):
     return np.argmax(probas)
 
 
-def lstm_generate(model=loaded_model, diversity=0.1):
+def lstm_generate(model=loaded_model, diversity=0.3):
     lg.info("Generating with diversity = " + str(diversity))
 
     generated = ''
@@ -51,5 +51,5 @@ def lstm_generate(model=loaded_model, diversity=0.1):
 
     return generated
 
-
-generate()
+if __name__ == "__main__":
+    lstm_generate()
