@@ -6,7 +6,7 @@ import numpy as np
 
 from keras.models import load_model
 
-loaded_model = load_model("lstm_char_iter_25.model.h5")
+loaded_model = load_model("lstm_char_iter_38.model.h5")
 char_indices = pickle.load(open("ch2i.bin", "rb"))
 indices_char = pickle.load(open("i2ch.bin", "rb"))
 
@@ -42,6 +42,8 @@ def lstm_generate(model=loaded_model, diversity=0.3):
 
         generated += next_char
         sentence = sentence[1:] + next_char
+
+    generated = generated.split("[E]")[0]
 
     generated = generated \
         .replace("[S]", "") \

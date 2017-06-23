@@ -5,12 +5,11 @@ import random
 
 import telebot
 
-from fluxus_bot.log_config import *
 from fluxus_bot.markovchain import char_level, word_level
 from fluxus_bot.markovchain.char_level import MarkovianCharLevelGenerator
 from fluxus_bot.markovchain.word_level import MarkovianWordLevelGenerator
 
-# from fluxus_bot.lstm_gen import *
+from fluxus_bot.lstm_gen import *
 
 config_parser = configparser.ConfigParser()
 config_parser.read("configs/bot.ini")
@@ -63,6 +62,7 @@ def send_about(message):
 
 @bot.message_handler(commands=['random'])
 def send_random(message):
+    print("random")
     try:
         random_score = scores[random.randint(0, len(scores))]
         msg = bot.send_message(message.chat.id, random_score)
@@ -73,20 +73,23 @@ def send_random(message):
         print(e)
 
 
-# @bot.message_handler(commands=['/neural'])
-# def send_random(message):
-#     try:
-#         neural_gen = lstm_generate()
-#         msg = bot.send_message(message.chat.id, neural_gen)
-#         print(msg)
-#     except Exception as e:
-#         msg = bot.send_message(message.chat.id, "Oops, error " + str(e))
-#         print(msg)
-#         print(e)
+@bot.message_handler(commands=['neural'])
+def send_neural(message):
+    print("neural")
+    try:
+        neural_gen = lstm_generate()
+        print("generated ", neural_gen)
+        msg = bot.send_message(message.chat.id, neural_gen)
+        print(msg)
+    except Exception as e:
+        msg = bot.send_message(message.chat.id, "Oops, error " + str(e))
+        print(msg)
+        print(e)
 
 
 @bot.message_handler(regexp="/markov char \d+")
 def send_markov_char(message):
+    print("markov c")
     try:
         numbers = [int(s) for s in message.text.split() if s.isdigit()]
         # todo: pretrain a lot of models
@@ -105,6 +108,7 @@ def send_markov_char(message):
 
 @bot.message_handler(regexp="/markov word \d+")
 def send_markov_char(message):
+    print("markov w")
     try:
         numbers = [int(s) for s in message.text.split() if s.isdigit()]
         # todo: pretrain a lot of models
