@@ -8,6 +8,7 @@ from fluxus_bot.markovchain import *
 from fluxus_bot.markovchain import char_level, word_level
 from fluxus_bot.markovchain.char_level import MarkovianCharLevelGenerator
 from fluxus_bot.markovchain.word_level import MarkovianWordLevelGenerator
+from fluxus_bot.log_config import *
 
 config_parser = configparser.ConfigParser()
 config_parser.read("configs/bot.ini")
@@ -78,9 +79,12 @@ def send_markov_char(message):
         char_generator = MarkovianCharLevelGenerator(numbers[0]).fit(char_level.TEXTS)
         generated_text = char_generator.generate_text()
         msg = bot.send_message(message.chat.id, generated_text)
+        lg.info(str(msg))
         print(msg)
     except Exception as e:
         msg = bot.send_message(message.chat.id, "Oops, error " + str(e))
+        lg.error(str(msg))
+        lg.error(str(e))
         print(msg)
         print(e)
 
@@ -93,9 +97,12 @@ def send_markov_char(message):
         word_generator = MarkovianWordLevelGenerator(numbers[0]).fit(word_level.TEXTS)
         generated_text = word_generator.generate_text()
         msg = bot.send_message(message.chat.id, generated_text)
+        lg.info(str(msg))
         print(msg)
     except Exception as e:
         msg = bot.send_message(message.chat.id, "Oops, error " + str(e))
+        lg.error(str(msg))
+        lg.error(str(e))
         print(msg)
         print(e)
 

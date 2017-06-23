@@ -42,6 +42,7 @@ print('Vectorization...')
 
 X = np.zeros((len(sentences), maxlen, len(chars)), dtype=np.bool)
 y = np.zeros((len(sentences), len(chars)), dtype=np.bool)
+
 for i, sentence in enumerate(sentences):
     for t, char in enumerate(sentence):
         X[i, t, char_indices[char]] = 1
@@ -84,13 +85,15 @@ for iteration in range(1, 60):
 
         generated = ''
         # sentence = text[start_index: start_index + maxlen]
-        sentence = "[s]  <n> "
+        sentence = " " * 31 + "[s]  <n> "
         generated += sentence
         print('----- Generating with seed: "' + sentence + '"')
         sys.stdout.write(generated)
 
         for i in range(400):
+
             x = np.zeros((1, len(sentence), len(chars)))
+
             for t, char in enumerate(sentence):
                 x[0, t, char_indices[char]] = 1.
 
